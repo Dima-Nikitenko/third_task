@@ -19,6 +19,8 @@ public class BasePage {
     protected static Logger logger = Logger.getInstance();
     protected static Localization locale = new Localization();
 
+    public static String translateText = "translate(text(), ' ', ' ')";
+
     public BasePage(final By pageLocator, final String pageTitle) {
         browser.waitForPageToLoad();
         initPage(pageLocator, pageTitle);

@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 
 public class AppPage extends BasePage {
 
-    private static String uniqueElement = "//div[@id = 'appHubAppName'][contains(text(), '%s')]";
+    private static String uniqueElement = String.format("//div[@id = 'appHubAppName'][contains(%1$s, '%2$s')]", translateText, "%s");
     private static String lblTitle = ActionPage.lblChosenAppTitle;
 
     public AppPage() {
