@@ -66,7 +66,7 @@ public class ActionPage extends BasePage {
         Label lblMostProfitableApp = new Label(lblSpecialsMaxDiscount, highestDiscount, "Highest Discount");
         Label lblAppTitle = new Label(lblWidgetTitle, highestDiscount, "App Title");
         lblMostProfitableApp.moveToElement();
-        lblChosenAppTitle = WordUtils.capitalizeFully(lblAppTitle.getText());
+        lblChosenAppTitle = lblAppTitle.getText();
         lblAppTitle = new Label(lblWidgetTitle.concat("/./parent::a"), highestDiscount, "App Title to Click");
         lblAppTitle.clickAndWait();
         checkIfAgeCheckPageIsOpened();

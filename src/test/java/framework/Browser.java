@@ -1,17 +1,12 @@
 package framework;
 
-import org.openqa.selenium.TimeoutException;
-import org.testng.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import java.nio.file.Path;
 import java.time.Duration;
-import java.nio.file.Paths;
 import javax.naming.NamingException;
 
 public final class Browser {
@@ -38,7 +33,6 @@ public final class Browser {
     public static String refreshedStalenessTimeout;
 
     Actions actions = new Actions(driver);
-    private static BaseTest baseTest;
     private static Logger logger = Logger.getInstance();
 
     private static void initProperties() {
@@ -72,7 +66,7 @@ public final class Browser {
         return Logger.getLogProperty(key);
     }
 
-    public WebDriver getDriver() {
+    public static WebDriver getDriver() {
         return driver;
     }
 
@@ -103,29 +97,6 @@ public final class Browser {
     public void refresh() {
         getDriver().navigate().refresh();
         waitForPageToLoad();
-    }
-
-    public void assertDownload(By locator) {
-        String downloadHref = getDriver().findElement(locator).getAttribute("href");
-        String fileNameFromHref = downloadHref.substring(downloadHref.lastIndexOf('/')+1);
-        String downloadedFile = Paths.get(fileNameFromHref).getFileName().toString();
-        Path downloadFilePath = Paths.get(BrowserFactory.pathToDownloads, downloadedFile);
-        logger.info(String.format(getLogProperty("locale.download.wait"), fileNameFromHref));
-        try {
-            new WebDriverWait(getDriver(), Duration.ofSeconds(Integer.parseInt(Browser.downloadTimeout)))
-                    .until(d -> downloadFilePath.toFile().exists());
-        } catch (TimeoutException e) {
-            logger.fatal(getLogProperty("locale.download.timeout"));
-        }
-        logger.info(getLogProperty("locale.download.finished"));
-        String actual = downloadFilePath.toFile().getName();
-        logger.info(getLogProperty("locale.download.verify"));
-        try {
-            Assert.assertEquals(actual, fileNameFromHref, (Logger.getLogProperty("locale.is.absent")));
-        } catch (AssertionError exc) {
-            logger.fatal(getLogProperty("locale.download.failed"), exc);
-        }
-        logger.info(getLogProperty("locale.download.verified"));
     }
 
     public void closeAndQuit() {

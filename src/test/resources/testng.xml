@@ -2,8 +2,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Steam Test Suite">
     <parameter name="Language"  value="English"/>
-    <parameter name="MenuItem"  value="Categories"/>
-    <parameter name="SubMenuItem"  value="Action"/>
     <test name="Test Steam">
         <classes>
             <class name="steam.tests.TestSteam"/>

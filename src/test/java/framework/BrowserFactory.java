@@ -11,22 +11,12 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.nio.file.Paths;
 import javax.naming.NamingException;
 
+import static framework.utils.FileUtils.pathToDownloads;
+
 public abstract class BrowserFactory {
-
-    public static String pathToDownloads;
-
-    static {
-        try {
-            pathToDownloads = Paths.get("src\\test\\resources\\downloadedFiles").toFile().getCanonicalPath();
-        } catch (IOException exc) {
-            exc.printStackTrace();
-        }
-    }
 
     public static WebDriver setup(final String browser) throws NamingException {
 

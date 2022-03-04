@@ -1,6 +1,7 @@
 package steam.pages;
 
 import framework.BasePage;
+import framework.utils.FileUtils;
 import org.openqa.selenium.By;
 import framework.elements.Button;
 
@@ -19,6 +20,6 @@ public class InstallSteamPage extends BasePage {
         String btnName = locale.getLocalizedElementProperty(BUTTON_DOWNLOAD_STEAM);
         Button btnInstallSteam = new Button(btnInstallSteamLocator, btnName, btnName);
         btnInstallSteam.click();
-        browser.assertDownload(btnInstallSteam.getLocator());
+        FileUtils.assertDownload(btnInstallSteam.getLocator());
     }
 }

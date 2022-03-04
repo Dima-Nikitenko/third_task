@@ -26,35 +26,26 @@ public abstract class BaseElement {
 
     protected Browser browser = Browser.getInstance();
     protected static Logger logger = Logger.getInstance();
-    Actions action = new Actions(browser.getDriver());
-    String blankLocator;
+    Actions action = new Actions(Browser.getDriver());
 
     protected BaseElement(final By locator, final String elementName) {
         this.locator = locator;
         this.elementName = elementName;
-        wait = new WebDriverWait(browser.getDriver(), Duration.ofSeconds(Long.parseLong(Browser.conditionTimeout)));
+        wait = new WebDriverWait(Browser.getDriver(), Duration.ofSeconds(Long.parseLong(Browser.conditionTimeout)));
     }
 
     protected BaseElement(String elementLocator, String insertString, final String elementName) {
         if (elementLocator.contains(ID)) {
-            blankLocator = elementLocator.replace(ID, "");
-            blankLocator = String.format(blankLocator, insertString);
-            locator = By.id(blankLocator);
-            this.elementName = elementName;
+            locator = By.id(String.format(elementLocator.replace(ID, ""), insertString));
         } else if (elementLocator.contains(CLASS)) {
-            blankLocator = elementLocator.replace(CLASS, "");
-            blankLocator = String.format(blankLocator, insertString);
-            locator = By.className(blankLocator);
-            this.elementName = elementName;
+            locator = By.className(String.format(elementLocator.replace(CLASS, ""), insertString));
         } else if (elementLocator.contains(XPATH)) {
-            blankLocator = elementLocator.replace(XPATH, "");
-            blankLocator = String.format(blankLocator, insertString);
-            locator = By.xpath(blankLocator);
-            this.elementName = elementName;
+            locator = By.xpath(String.format(elementLocator.replace(XPATH, ""), insertString));
         } else {
             logger.fatal("Unknown locator's type.");
         }
-        wait = new WebDriverWait(browser.getDriver(), Duration.ofSeconds(Long.parseLong(Browser.conditionTimeout)));
+        this.elementName = elementName;
+        wait = new WebDriverWait(Browser.getDriver(), Duration.ofSeconds(Long.parseLong(Browser.conditionTimeout)));
     }
 
     protected static String getLogProperty(final String key) {
@@ -77,12 +68,12 @@ public abstract class BaseElement {
     }
 
     public String getText() {
-        return getElement().getText();
+        return getElement().getAttribute("textContent");
     }
 
     protected boolean isElementPresent() {
         wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-        element = browser.getDriver().findElement(locator);
+        element = Browser.getDriver().findElement(locator);
         waitRefreshedStaleness();
         return element.isDisplayed();
     }
@@ -98,8 +89,8 @@ public abstract class BaseElement {
 
     public void waitRefreshedStaleness() {
         try {
-            new WebDriverWait(browser.getDriver(), Duration.ofSeconds(Long.parseLong(Browser.refreshedStalenessTimeout))).
-                    until(ExpectedConditions.refreshed(ExpectedConditions.stalenessOf(browser.getDriver().findElement(locator))));
+            new WebDriverWait(Browser.getDriver(), Duration.ofSeconds(Long.parseLong(Browser.refreshedStalenessTimeout))).
+                    until(ExpectedConditions.refreshed(ExpectedConditions.stalenessOf(Browser.getDriver().findElement(locator))));
         } catch (TimeoutException ignore) {
             //Do nothing. Element is not stale.
         }
@@ -112,19 +103,19 @@ public abstract class BaseElement {
 
     public List<WebElement> findListOfElements() {
         waitForElementToBePresent();
-        return browser.getDriver().findElements(locator);
+        return Browser.getDriver().findElements(locator);
     }
 
     public void scrollToElement() {
-        ((JavascriptExecutor) browser.getDriver()).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
-        if (browser.getDriver() instanceof JavascriptExecutor) {
-            ((JavascriptExecutor)browser.getDriver()).executeScript("arguments[0].style.border='3px solid red'", element);
+        ((JavascriptExecutor) Browser.getDriver()).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+        if (Browser.getDriver() instanceof JavascriptExecutor) {
+            ((JavascriptExecutor) Browser.getDriver()).executeScript("arguments[0].style.border='3px solid red'", element);
         }
     }
 
     public void scrollToElementRaw() {
         waitForElementToBePresent();
-        ((JavascriptExecutor) browser.getDriver()).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+        ((JavascriptExecutor) Browser.getDriver()).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
     }
 
     public void moveToElement() {
@@ -136,7 +127,7 @@ public abstract class BaseElement {
     public void click() {
         moveToElement();
         logger.info(String.format(getLogProperty("locale.clicking"), elementName, getElementType().toLowerCase()));
-        ((JavascriptExecutor) browser.getDriver()).executeScript("arguments[0].setAttribute('target', '_self');", element);
+        ((JavascriptExecutor) Browser.getDriver()).executeScript("arguments[0].setAttribute('target', '_self');", element);
         try {
             element.click();
         } catch (ElementClickInterceptedException exc) {

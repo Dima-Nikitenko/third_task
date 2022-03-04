@@ -11,15 +11,15 @@ public class TestSteam extends BaseTest {
 
     Logger logger = new Logger();
 
-    @Parameters({ "Language", "MenuItem", "SubMenuItem" }) // specified in the testng.xml file
+    @Parameters({ "Language" }) // specified in the testng.xml file
     @Test
-    void testSteam(String language, String menuItem, String subMenuItem) {
+    void testSteam(String language) {
         logger.step(1);
         BaseSteamPage baseSteamPage = new BaseSteamPage();
         logger.step(2);
         baseSteamPage.checkLanguage(language);
         logger.step(3);
-        baseSteamPage.navigateMenu(menuItem, subMenuItem);
+        baseSteamPage.navigateMenu("Categories", "Action");
         logger.step(4);
         ActionPage actionPage = new ActionPage();
         logger.step(5);
